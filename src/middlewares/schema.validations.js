@@ -10,9 +10,12 @@ export function validateSchemaBody(schema) {
 }
 
 export function validateSchemaParams(schema) {
-  return (req, res, next) => {};
-}
-
-export function validateSchemaQuery(schema) {
-  return (req, res, next) => {};
+  return async (req, res, next) => {
+    try {
+      await schema.validateAsync(req.params);
+      next();
+    } catch ({ message }) {
+      return res.status(422).send(message);
+    }
+  };
 }
