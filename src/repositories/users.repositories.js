@@ -31,12 +31,31 @@ export async function findUserForLogin(email) {
   );
 }
 
-export async function deleteUrlById(id) {
-  return await db.query(
-    `
-      DELETE FROM urls 
-      WHERE id = $1
-    `,
-    [id]
+export async function findUserInfo(userId) {
+  return (
+    (
+      await db.query(
+        `
+        SELECT users.id AS "userID",
+        users.name AS "userName",
+        CAST(COALESCE(SUM(urls.visits), 0) AS INTEGER) AS "totalVisits",
+        CASE
+        WHEN COUNT(urls) = 0 THEN ARRAY[]::JSON[]
+        ELSE  ARRAY_AGG(
+                JSON_BUILD_OBJECT(
+                    'id', urls."id",
+                    'shortUrl', urls."shortUrl",
+                    'url', urls."url",
+                    'visits', urls."visits"
+                )
+              )
+        END AS "shortenedUrls"
+        FROM users LEFT JOIN urls ON urls."userId" = users.id
+        WHERE users.id = $1
+        GROUP BY users.id;
+        `,
+        [userId]
+      )
+    )?.rows[0] ?? {}
   );
 }

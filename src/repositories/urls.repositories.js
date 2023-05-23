@@ -52,3 +52,13 @@ export async function findUrlUserIdById(id) {
     )?.rows[0] ?? {}
   );
 }
+
+export async function deleteUrlById(id) {
+  return await db.query(
+    `
+      DELETE FROM urls 
+      WHERE id = $1
+    `,
+    [id]
+  );
+}

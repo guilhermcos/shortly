@@ -4,8 +4,8 @@ import {
   findUrlById,
   findUrlByShortUrl,
   insertNewShortUrl,
+  deleteUrlById,
 } from "../repositories/urls.repositories.js";
-import { deleteUrlById } from "../repositories/users.repositories.js";
 
 export default class UrlsControllers {
   async createShortUrl(req, res) {
