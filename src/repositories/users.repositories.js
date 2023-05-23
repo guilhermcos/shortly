@@ -36,9 +36,9 @@ export async function findUserInfo(userId) {
     (
       await db.query(
         `
-        SELECT users.id AS "userID",
-        users.name AS "userName",
-        CAST(COALESCE(SUM(urls.visits), 0) AS INTEGER) AS "totalVisits",
+        SELECT users.id AS "id",
+        users.name AS "name",
+        CAST(COALESCE(SUM(urls.visits), 0) AS INTEGER) AS "visitCount",
         CASE
         WHEN COUNT(urls) = 0 THEN ARRAY[]::JSON[]
         ELSE  ARRAY_AGG(
@@ -46,7 +46,7 @@ export async function findUserInfo(userId) {
                     'id', urls."id",
                     'shortUrl', urls."shortUrl",
                     'url', urls."url",
-                    'visits', urls."visits"
+                    'visitCount', urls."visits"
                 )
               )
         END AS "shortenedUrls"
