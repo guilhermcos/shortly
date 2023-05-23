@@ -11,7 +11,7 @@ export async function findUsersByRanking() {
         CAST(COALESCE(SUM(urls.visits), 0) AS INTEGER) AS "visitCount"
     FROM users LEFT JOIN urls ON users."id" = urls."userId"
     GROUP BY users.id
-    ORDER BY SUM(urls.visits)
+    ORDER BY SUM(urls.visits) DESC
     LIMIT 10
     `)
     )?.rows ?? []
